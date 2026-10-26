@@ -1,9 +1,15 @@
-import Hero from "@/components/hero/hero";
+import Hero from "@/components/home/hero/hero";
+import Testimonials from "@/components/home/testimonials";
+import WhyChoose from "@/components/home/why-choose";
+import Cta from "@/components/home/cta";
 
 export default function Home() {
   return (
-    <div>
+    <main>
       <Hero />
-    </div>
+      <WhyChoose />
+      <Testimonials />
+      <Cta />
+    </main>
   );
 }

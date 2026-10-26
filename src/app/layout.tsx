@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import NavBer from "@/components/nav/navBer";
+import Footer from "@/components/footer/footer";
 
 const CormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <NavBer />
 
         {children}
+        <Footer />
       </body>
     </html>
   );
