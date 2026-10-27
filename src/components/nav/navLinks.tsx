@@ -26,7 +26,10 @@ const NavLinksLeft = () => {
         </Link>
       </li>
       <li>
-        <Link className="transition-colors hover:text-cyan-600" href="/admin">
+        <Link
+          className="transition-colors hover:text-cyan-600"
+          href="/add-new-package"
+        >
           Admin
         </Link>
       </li>
