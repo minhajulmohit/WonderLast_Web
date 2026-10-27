@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation";
 import { LogOut, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,14 +55,14 @@ const NavLinksLeft = () => {
       <li>
         <Link
           aria-current={
-            isLinkActive(pathname, "/bookings") ? "page" : undefined
+            isLinkActive(pathname, "/mybookings") ? "page" : undefined
           }
           className={
-            isLinkActive(pathname, "/bookings")
+            isLinkActive(pathname, "/mybookings")
               ? "font-semibold text-cyan-600"
               : "transition-colors hover:text-cyan-600"
           }
-          href="/bookings"
+          href="/mybookings"
         >
           My Bookings
         </Link>
@@ -129,7 +125,10 @@ const NavLinksRight = () => {
             >
               <Avatar className="size-8 bg-cyan-600 text-white">
                 {user.image && (
-                  <AvatarImage src={user.image} alt={`${user.name}'s profile`} />
+                  <AvatarImage
+                    src={user.image}
+                    alt={`${user.name}'s profile`}
+                  />
                 )}
                 <AvatarFallback className="bg-cyan-600 text-xs font-medium text-white">
                   {initial}
@@ -143,7 +142,10 @@ const NavLinksRight = () => {
               <div className="flex items-center gap-3 px-2 py-2">
                 <Avatar className="size-9 bg-cyan-600 text-white">
                   {user.image && (
-                    <AvatarImage src={user.image} alt={`${user.name}'s profile`} />
+                    <AvatarImage
+                      src={user.image}
+                      alt={`${user.name}'s profile`}
+                    />
                   )}
                   <AvatarFallback className="bg-cyan-600 text-xs font-medium text-white">
                     {initial}
@@ -162,7 +164,9 @@ const NavLinksRight = () => {
               <DropdownMenuItem
                 render={<Link href="/profile" />}
                 className="cursor-pointer text-xs"
-                aria-current={isLinkActive(pathname, "/profile") ? "page" : undefined}
+                aria-current={
+                  isLinkActive(pathname, "/profile") ? "page" : undefined
+                }
               >
                 <UserRound aria-hidden="true" size={14} />
                 Go to Profile
@@ -183,7 +187,9 @@ const NavLinksRight = () => {
             <>
               <li>
                 <Link
-                  aria-current={isLinkActive(pathname, "/signin") ? "page" : undefined}
+                  aria-current={
+                    isLinkActive(pathname, "/signin") ? "page" : undefined
+                  }
                   className={
                     isLinkActive(pathname, "/signin")
                       ? "font-semibold text-cyan-600"
@@ -196,7 +202,9 @@ const NavLinksRight = () => {
               </li>
               <li>
                 <Link
-                  aria-current={isLinkActive(pathname, "/signup") ? "page" : undefined}
+                  aria-current={
+                    isLinkActive(pathname, "/signup") ? "page" : undefined
+                  }
                   className={
                     isLinkActive(pathname, "/signup")
                       ? "font-semibold text-cyan-600"

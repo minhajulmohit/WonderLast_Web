@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Destinations", href: "/destinations" },
-  { label: "My Bookings", href: "/bookings" },
+  { label: "My Bookings", href: "/mybookings" },
   { label: "My Profile", href: "/profile" },
 ];
 
