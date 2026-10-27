@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
-  ArrowRight,
+ 
   CalendarDays,
   Check,
   MapPin,
+  Trash2,
 } from "lucide-react";
 import type { TravelPackage } from "@/types/travel-package";
 import {
@@ -16,19 +17,10 @@ import {
 } from "@/lib/travel-package";
 import DestinationDetailsSkeleton from "@/components/destinations/destination-details-skeleton";
 import EditDestinationDialog from "@/components/destinations/edit-destination-dialog";
-import DeleteDestinationDialog from "@/components/destinations/delete-destination-dialog";
-import { toast } from "@/components/ui/toast";
+import BookingCard from "../bookings/bookingcard";
+import CachedRemoteImage from "@/components/ui/cached-remote-image";
 
-function formatDepartureDate(date: string): string {
-  const parsedDate = new Date(`${date}T00:00:00`);
-  if (Number.isNaN(parsedDate.getTime())) return date;
 
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  }).format(parsedDate);
-}
 
 export default function DestinationDetails({ id }: { id: string }) {
   const [destination, setDestination] = useState<TravelPackage | null>(null);
@@ -61,16 +53,11 @@ export default function DestinationDetails({ id }: { id: string }) {
         if (isActive) setDestination(data);
       } catch (error) {
         if (isActive) {
-          const description =
+          setErrorMessage(
             error instanceof Error
               ? error.message
-              : "Please try again.";
-          setErrorMessage(description);
-          toast.add({
-            title: "Could not load destination",
-            description,
-            type: "error",
-          });
+              : "Could not load destination details. Please try again.",
+          );
         }
       } finally {
         if (isActive) setIsLoading(false);
@@ -112,10 +99,11 @@ export default function DestinationDetails({ id }: { id: string }) {
         <section className="mx-auto max-w-6xl">
           {backLink}
           <div
-            className="mt-8 border border-neutral-200 bg-neutral-50 p-5 text-sm text-neutral-700"
+            role="alert"
+            className="mt-8 border border-red-100 bg-red-50 p-5 text-sm text-red-700"
           >
-            This destination could not be loaded. Use “Back to Destinations” to
-            return to the package list.
+            Could not load this destination
+            {errorMessage ? `: ${errorMessage}` : "."}
           </div>
         </section>
       </main>
@@ -141,23 +129,24 @@ export default function DestinationDetails({ id }: { id: string }) {
               destinationId={id}
               onSaved={setDestination}
             />
-            <DeleteDestinationDialog
-              destinationId={id}
-              destinationName={destination.destinationName}
-            />
+            <Link
+              href="/all-destinations"
+              className="inline-flex h-8 items-center gap-1.5 border border-red-300 px-3 text-xs text-red-500 transition-colors hover:bg-red-50"
+            >
+              <Trash2 aria-hidden="true" size={12} />
+              Delete
+            </Link>
           </div>
         </div>
 
-        <div
-          role={imageUrl ? "img" : undefined}
-          aria-label={imageUrl ? destination.destinationName : undefined}
-          className="mt-4 aspect-16/7 overflow-hidden bg-linear-to-br from-cyan-100 via-sky-200 to-emerald-100 bg-cover bg-center"
-          style={
-            imageUrl
-              ? { backgroundImage: `url(${JSON.stringify(imageUrl)})` }
-              : undefined
-          }
-        />
+        <div className="relative mt-4 aspect-16/7 overflow-hidden bg-linear-to-br from-cyan-100 via-sky-200 to-emerald-100">
+          <CachedRemoteImage
+            alt={destination.destinationName}
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            src={imageUrl}
+          />
+        </div>
 
         <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_290px] lg:gap-12">
           <div>
@@ -229,45 +218,9 @@ export default function DestinationDetails({ id }: { id: string }) {
             </section>
           </div>
 
-          <aside className="border border-neutral-200 p-4 shadow-sm">
-            <p className="text-[10px] text-neutral-500">Starting from</p>
-            <p className="mt-0.5 text-2xl font-semibold text-cyan-700">
-              ${Number(destination.price).toLocaleString()}
-            </p>
-            <p className="text-[10px] text-neutral-500">per person</p>
-
-            <div className="mt-4 flex items-center gap-2 bg-slate-50 px-3 py-2.5 text-xs text-neutral-700">
-              <CalendarDays
-                aria-hidden="true"
-                className="text-neutral-500"
-                size={14}
-              />
-              {formatDepartureDate(destination.departureDate)}
-            </div>
-
-            <Link
-              href={`/bookings?packageId=${encodeURIComponent(id)}`}
-              className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 bg-cyan-600 px-4 text-xs font-medium text-white transition-colors hover:bg-cyan-700"
-            >
-              Book Now
-              <ArrowRight aria-hidden="true" size={14} />
-            </Link>
-
-            <ul className="mt-4 space-y-2 border-t border-neutral-100 pt-4 text-[11px] text-neutral-600">
-              <li className="flex items-center gap-2">
-                <Check aria-hidden="true" className="text-emerald-600" size={13} />
-                Departure date included
-              </li>
-              <li className="flex items-center gap-2">
-                <Check aria-hidden="true" className="text-emerald-600" size={13} />
-                {destination.duration} package
-              </li>
-              <li className="flex items-center gap-2">
-                <Check aria-hidden="true" className="text-emerald-600" size={13} />
-                {destination.country} destination
-              </li>
-            </ul>
-          </aside>
+          <BookingCard
+            destination={{ ...destination, id: destination.id ?? id }}
+          />
         </div>
       </section>
     </main>
