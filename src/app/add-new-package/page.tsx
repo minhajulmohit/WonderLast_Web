@@ -106,12 +106,12 @@ export default function AddNewPackagePage() {
                 <option value="" disabled>
                   Select category
                 </option>
-                <option value="beach">Beach</option>
                 <option value="adventure">Adventure</option>
-                <option value="cultural">Cultural</option>
+                <option value="beach">Beach</option>
                 <option value="city">City</option>
-                <option value="city">Mountain</option>
                 <option value="city">Cruise</option>
+                <option value="cultural">Cultural</option>
+                <option value="city">Mountain</option>
               </select>
             </div>
           </div>
