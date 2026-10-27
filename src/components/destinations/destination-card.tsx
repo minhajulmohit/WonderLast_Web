@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import type { TravelPackage } from "@/types/travel-package";
 import { getTravelPackageImageUrl } from "@/lib/travel-package";
+import CachedRemoteImage from "@/components/ui/cached-remote-image";
 
 export default function DestinationCard({
   destination,
@@ -14,15 +15,11 @@ export default function DestinationCard({
   return (
     <article className="group min-w-0 rounded-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-video overflow-hidden bg-linear-to-br from-cyan-100 via-sky-200 to-emerald-100">
-        <div
-          aria-label={destination.destinationName}
-          role="img"
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-300 ease-out group-hover:scale-105"
-          style={
-            imageUrl
-              ? { backgroundImage: `url(${JSON.stringify(imageUrl)})` }
-              : undefined
-          }
+        <CachedRemoteImage
+          alt={destination.destinationName}
+          className="absolute inset-0 object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          src={imageUrl}
         />
         <span className="absolute right-2 top-2 bg-white/44 px-2 py-1 text-[12px] font-medium capitalize text-neutral-800 shadow-sm">
           {destination.category}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Eye, LoaderCircle, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
+import CachedRemoteImage from "@/components/ui/cached-remote-image";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -83,6 +84,7 @@ export default function MyBookingCard({ booking }: { booking: MyBooking }) {
         description: `${booking.destinationName} booking was cancelled.`,
         type: "success",
       });
+      window.dispatchEvent(new Event("wanderlast:bookings-updated"));
       router.refresh();
     } catch (error) {
       toast.add({
@@ -104,20 +106,14 @@ export default function MyBookingCard({ booking }: { booking: MyBooking }) {
       }}
     >
       <article className="grid gap-4 border border-neutral-200 p-3 sm:grid-cols-[230px_minmax(0,1fr)] sm:items-center sm:p-4">
-        {image ? (
-          <div
-            aria-label={booking.destinationName}
-            className="h-40 bg-cover bg-center sm:h-32"
-            role="img"
-            style={{ backgroundImage: `url("${image}")` }}
+        <div className="relative h-40 bg-slate-100 sm:h-32">
+          <CachedRemoteImage
+            alt={booking.destinationName}
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, 230px"
+            src={image}
           />
-        ) : (
-          <div
-            aria-label={`${booking.destinationName} image unavailable`}
-            className="h-40 bg-slate-100 sm:h-32"
-            role="img"
-          />
-        )}
+        </div>
 
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">

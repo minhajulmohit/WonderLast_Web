@@ -89,6 +89,7 @@ const BookingCard = ({
         description: `Your trip to ${destination.destinationName} is booked for ${departureDate}.`,
         type: "success",
       });
+      window.dispatchEvent(new Event("wanderlast:bookings-updated"));
     } catch (error) {
       toast.add({
         title: "Could not create booking",

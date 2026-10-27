@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LogOut, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
@@ -21,6 +22,60 @@ function isLinkActive(pathname: string, href: string): boolean {
 
 const NavLinksLeft = () => {
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
+  const email = session?.user?.email;
+  const [bookingCountState, setBookingCountState] = useState({
+    email: "",
+    count: 0,
+  });
+
+  useEffect(() => {
+    const currentEmail: string = email ?? "";
+    if (!currentEmail) return;
+
+    let isActive = true;
+    async function loadBookingCount() {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/my-bookings/${encodeURIComponent(currentEmail)}`,
+          { cache: "no-store" },
+        );
+        if (!response.ok) {
+          throw new Error(`Booking server responded with ${response.status}.`);
+        }
+
+        const bookings: unknown = await response.json();
+        if (!Array.isArray(bookings)) {
+          throw new Error("Booking server returned an invalid response.");
+        }
+
+        if (isActive) {
+          setBookingCountState({ email: currentEmail, count: bookings.length });
+        }
+      } catch (error) {
+        if (isActive) {
+          console.error("Could not load booking count:", error);
+        }
+      }
+    }
+
+    const handleBookingsUpdated = () => {
+      void loadBookingCount();
+    };
+
+    void loadBookingCount();
+    window.addEventListener("wanderlast:bookings-updated", handleBookingsUpdated);
+    return () => {
+      isActive = false;
+      window.removeEventListener(
+        "wanderlast:bookings-updated",
+        handleBookingsUpdated,
+      );
+    };
+  }, [email]);
+
+  const bookingCount =
+    email && bookingCountState.email === email ? bookingCountState.count : 0;
 
   return (
     <ul className="hidden items-center gap-5 text-[12px] text-neutral-900 md:flex">
@@ -64,7 +119,12 @@ const NavLinksLeft = () => {
           }
           href="/mybookings"
         >
-          My Bookings
+          <span className="relative inline-flex">
+            My Bookings
+            <span className="absolute -right-3 -top-2 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-cyan-600 px-1 text-[9px] font-semibold leading-none text-white">
+              {bookingCount}
+            </span>
+          </span>
         </Link>
       </li>
       <li>
