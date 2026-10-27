@@ -3,6 +3,7 @@ import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import NavBer from "@/components/nav/navBer";
 import Footer from "@/components/footer/footer";
+import { Toaster } from "@/components/ui/toast";
 
 const CormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -21,10 +22,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={` ${CormorantGaramond.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NavBer />
+        <Toaster>
+          <NavBer />
 
-        {children}
-        <Footer />
+          {children}
+          <Footer />
+        </Toaster>
       </body>
     </html>
   );

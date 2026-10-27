@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { PackagePlus, X } from "lucide-react";
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { toast } from "@/components/ui/toast";
 
 const inputClassName =
   "mt-1 h-9 w-full border-0 bg-slate-100 px-3 text-xs text-neutral-800 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-cyan-500";
@@ -11,11 +11,8 @@ const inputClassName =
 const labelClassName = "block text-xs font-medium text-neutral-900";
 
 export default function AddNewPackagePage() {
-  const [submitMessage, setSubmitMessage] = useState("");
-
   const handleAddBtn = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setSubmitMessage("");
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -44,14 +41,21 @@ export default function AddNewPackagePage() {
         );
       }
 
-      setSubmitMessage("Travel package added successfully.");
+      toast.add({
+        title: "Travel package added",
+        description: "The new travel package is ready.",
+        type: "success",
+      });
       form.reset();
     } catch (error) {
-      setSubmitMessage(
-        error instanceof Error
-          ? `Could not add travel package: ${error.message}`
-          : "Could not add travel package. Please try again.",
-      );
+      toast.add({
+        title: "Could not add travel package",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Please try again.",
+        type: "error",
+      });
     }
   };
 
@@ -201,18 +205,6 @@ export default function AddNewPackagePage() {
               Add Travel Package
             </button>
           </div>
-          {submitMessage && (
-            <p
-              aria-live="polite"
-              className={`mt-3 text-xs ${
-                submitMessage.startsWith("Travel package added")
-                  ? "text-green-700"
-                  : "text-red-600"
-              }`}
-            >
-              {submitMessage}
-            </p>
-          )}
         </form>
       </div>
     </main>

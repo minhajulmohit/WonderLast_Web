@@ -1,28 +1,15 @@
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import type { TravelPackage } from "@/types/travel-package";
-
-function getImageUrl(destination: TravelPackage): string | null {
-  const image = destination.image ?? destination.imageUrl ?? "";
-  const markdownLink = image.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
-  const candidate = markdownLink?.[2] ?? image.trim();
-
-  try {
-    const url = new URL(candidate);
-    return url.protocol === "https:" || url.protocol === "http:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
-}
+import { getTravelPackageImageUrl } from "@/lib/travel-package";
 
 export default function DestinationCard({
   destination,
 }: {
   destination: TravelPackage;
 }) {
-  const imageUrl = getImageUrl(destination);
+  const imageUrl = getTravelPackageImageUrl(destination);
+  const destinationId = destination._id ?? destination.id;
 
   return (
     <article className="group min-w-0 rounded-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
@@ -63,7 +50,11 @@ export default function DestinationCard({
         </p>
 
         <Link
-          href="/bookings"
+          href={
+            destinationId
+              ? `/all-destinations/${encodeURIComponent(destinationId)}`
+              : "/all-destinations"
+          }
           className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-cyan-700 transition-colors hover:text-cyan-900"
         >
           BOOK NOW

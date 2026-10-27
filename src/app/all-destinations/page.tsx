@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { TravelPackage } from "@/types/travel-package";
 import DestinationCard from "@/components/destinations/destination-card";
 import DestinationCardSkeleton from "@/components/destinations/destination-card-skeleton";
+import { isTravelPackage } from "@/lib/travel-package";
+import { toast } from "@/components/ui/toast";
 
 type SortOption = "featured" | "price-low" | "price-high" | "name";
 type PriceRange = "all" | "under-500" | "500-1000" | "1000-2000" | "over-2000";
@@ -15,26 +17,6 @@ const priceRanges: { value: PriceRange; label: string }[] = [
   { value: "1000-2000", label: "$1,000 - $2,000" },
   { value: "over-2000", label: "Over $2,000" },
 ];
-
-function isTravelPackage(value: unknown): value is TravelPackage {
-  if (!value || typeof value !== "object") return false;
-
-  const item = value as Record<string, unknown>;
-  return (
-    typeof item.destinationName === "string" &&
-    typeof item.country === "string" &&
-    typeof item.category === "string" &&
-    typeof item.price === "number" &&
-    Number.isFinite(item.price) &&
-    typeof item.duration === "string" &&
-    typeof item.departureDate === "string" &&
-    typeof item.description === "string" &&
-    (item.image === undefined || typeof item.image === "string") &&
-    (item.imageUrl === undefined || typeof item.imageUrl === "string") &&
-    (item.rating === undefined ||
-      (typeof item.rating === "number" && Number.isFinite(item.rating)))
-  );
-}
 
 function isInPriceRange(price: number, range: PriceRange): boolean {
   switch (range) {
@@ -60,13 +42,11 @@ export default function AllDestinationsPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const controller = new AbortController();
+    let isActive = true;
 
     async function loadDestinations() {
       try {
-        const response = await fetch("http://localhost:8000/all-package", {
-          signal: controller.signal,
-        });
+        const response = await fetch("http://localhost:8000/all-package");
 
         if (!response.ok) {
           const error = await response.text();
@@ -84,21 +64,29 @@ export default function AllDestinationsPage() {
           );
         }
 
-        setDestinations(validPackages);
+        if (isActive) setDestinations(validPackages);
       } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") return;
-        setErrorMessage(
-          error instanceof Error
-            ? `Could not load destinations: ${error.message}`
-            : "Could not load destinations. Please try again.",
-        );
+        if (isActive) {
+          const description =
+            error instanceof Error
+              ? error.message
+              : "Please try again.";
+          setErrorMessage(description);
+          toast.add({
+            title: "Could not load destinations",
+            description,
+            type: "error",
+          });
+        }
       } finally {
-        if (!controller.signal.aborted) setIsLoading(false);
+        if (isActive) setIsLoading(false);
       }
     }
 
     void loadDestinations();
-    return () => controller.abort();
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const categories = useMemo(
@@ -226,8 +214,8 @@ export default function AllDestinationsPage() {
         </p>
 
         {errorMessage && (
-          <p role="alert" className="mt-6 text-sm text-red-600">
-            {errorMessage}
+          <p className="mt-6 text-sm text-neutral-500">
+            Destinations could not be loaded. Refresh the page to try again.
           </p>
         )}
 
