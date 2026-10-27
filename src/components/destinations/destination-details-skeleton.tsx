@@ -2,7 +2,7 @@ export default function DestinationDetailsSkeleton() {
   return (
     <div aria-label="Loading destination details" aria-busy="true">
       <div className="h-5 w-36 animate-pulse rounded bg-neutral-200" />
-      <div className="mt-4 aspect-[16/7] w-full animate-pulse rounded-sm bg-neutral-200" />
+      <div className="mt-4 aspect-16/7 w-full animate-pulse rounded-sm bg-neutral-200" />
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_290px]">
         <div className="space-y-4">
           <div className="h-4 w-28 animate-pulse rounded bg-neutral-200" />

@@ -96,13 +96,13 @@ const NavLinksRight = () => {
       </li>
       <li>
         <Link
-          aria-current={isLinkActive(pathname, "/login") ? "page" : undefined}
+          aria-current={isLinkActive(pathname, "/signin") ? "page" : undefined}
           className={
-            isLinkActive(pathname, "/login")
+            isLinkActive(pathname, "/signin")
               ? "font-semibold text-cyan-600"
               : "transition-colors hover:text-cyan-600"
           }
-          href="/login"
+          href="/signin"
         >
           Login
         </Link>
