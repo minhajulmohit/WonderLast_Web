@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Menu, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -76,73 +76,71 @@ const NavLinksLeft = () => {
 
   const bookingCount =
     email && bookingCountState.email === email ? bookingCountState.count : 0;
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/all-destinations", label: "Destinations" },
+    { href: "/mybookings", label: "My Bookings" },
+    { href: "/add-new-package", label: "Admin" },
+  ];
 
   return (
-    <ul className="hidden items-center gap-5 text-[12px] text-neutral-900 md:flex">
-      <li>
-        <Link
-          aria-current={isLinkActive(pathname, "/") ? "page" : undefined}
-          className={
-            isLinkActive(pathname, "/")
-              ? "font-semibold text-cyan-600"
-              : "transition-colors hover:text-cyan-600"
-          }
-          href="/"
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          aria-label="Open navigation menu"
+          className="inline-flex size-9 items-center justify-center text-neutral-800 outline-none hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-cyan-600 md:hidden"
         >
-          Home
-        </Link>
-      </li>
-      <li>
-        <Link
-          aria-current={
-            isLinkActive(pathname, "/all-destinations") ? "page" : undefined
-          }
-          className={
-            isLinkActive(pathname, "/all-destinations")
-              ? "font-semibold text-cyan-600"
-              : "transition-colors hover:text-cyan-600"
-          }
-          href="/all-destinations"
+          <Menu aria-hidden="true" size={19} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="start"
+          className="w-52 rounded-sm bg-white p-2 md:hidden"
         >
-          Destinations
-        </Link>
-      </li>
-      <li>
-        <Link
-          aria-current={
-            isLinkActive(pathname, "/mybookings") ? "page" : undefined
-          }
-          className={
-            isLinkActive(pathname, "/mybookings")
-              ? "font-semibold text-cyan-600"
-              : "transition-colors hover:text-cyan-600"
-          }
-          href="/mybookings"
-        >
-          <span className="relative inline-flex">
-            My Bookings
-            <span className="absolute -right-3 -top-2 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-cyan-600 px-1 text-[9px] font-semibold leading-none text-white">
-              {bookingCount}
-            </span>
-          </span>
-        </Link>
-      </li>
-      <li>
-        <Link
-          aria-current={
-            isLinkActive(pathname, "/add-new-package") ? "page" : undefined
-          }
-          className={
-            isLinkActive(pathname, "/add-new-package")
-              ? "font-semibold text-cyan-600"
-              : "transition-colors hover:text-cyan-600"
-          }
-          href="/add-new-package"
-        >
-          Admin
-        </Link>
-      </li>
-    </ul>
+          {links.map(({ href, label }) => (
+            <DropdownMenuItem
+              aria-current={isLinkActive(pathname, href) ? "page" : undefined}
+              className="cursor-pointer text-xs"
+              key={href}
+              render={<Link href={href} />}
+            >
+              <span>{label}</span>
+              {href === "/mybookings" && (
+                <span className="ml-auto inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-cyan-600 px-1 text-[10px] font-semibold text-white">
+                  {bookingCount}
+                </span>
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ul className="hidden items-center gap-5 text-[12px] text-neutral-900 md:flex">
+        {links.map(({ href, label }) => (
+          <li key={href}>
+            <Link
+              aria-current={isLinkActive(pathname, href) ? "page" : undefined}
+              className={
+                isLinkActive(pathname, href)
+                  ? "font-semibold text-cyan-600"
+                  : "transition-colors hover:text-cyan-600"
+              }
+              href={href}
+            >
+              {label === "My Bookings" ? (
+                <span className="relative inline-flex">
+                  {label}
+                  <span className="absolute -right-3 -top-2 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-cyan-600 px-1 text-[9px] font-semibold leading-none text-white">
+                    {bookingCount}
+                  </span>
+                </span>
+              ) : (
+                label
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 
