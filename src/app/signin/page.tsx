@@ -15,6 +15,14 @@ export default function SigninPage() {
     event.preventDefault();
     if (isSubmitting) return;
 
+    const requestedCallback = new URLSearchParams(window.location.search).get(
+      "callbackURL",
+    );
+    const callbackURL =
+      requestedCallback?.startsWith("/") &&
+      !requestedCallback.startsWith("//")
+        ? requestedCallback
+        : "/";
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email")?.toString().trim() ?? "";
     const password = formData.get("password")?.toString() ?? "";
@@ -26,7 +34,7 @@ export default function SigninPage() {
         email,
         password,
         rememberMe,
-        callbackURL: "/",
+        callbackURL,
       });
 
       if (error) {
@@ -42,7 +50,7 @@ export default function SigninPage() {
         description: "Welcome back to Wanderlast!",
         type: "success",
       });
-      router.push("/");
+      router.replace(callbackURL);
     } catch (error) {
       toast.add({
         title: "Could not sign in",

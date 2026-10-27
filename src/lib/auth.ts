@@ -6,6 +6,13 @@ const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db('wanderlast-users');
 
 export const auth = betterAuth({
+  user: {
+    additionalFields: {
+      nationality: { type: "string", required: false, input: true },
+      location: { type: "string", required: false, input: true },
+      phone: { type: "string", required: false, input: true },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
