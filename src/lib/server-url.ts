@@ -4,5 +4,7 @@ export const SERVER_URL = (
 
 export function serverApi(path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `/api/backend${normalizedPath}`;
+  return typeof window === "undefined"
+    ? `${SERVER_URL}${normalizedPath}`
+    : `/api/backend${normalizedPath}`;
 }

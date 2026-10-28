@@ -27,11 +27,8 @@ export async function DELETE(request: NextRequest) {
 }
 
 async function proxy(request: NextRequest) {
-  const segments = request.nextUrl.pathname
-    .replace(/^\/api\/backend\/?/, "")
-    .split("/")
-    .filter(Boolean);
-  const upstreamUrl = new URL(`${serverUrl}/${segments.map(encodeURIComponent).join("/")}${request.nextUrl.search}`);
+  const upstreamPath = request.nextUrl.pathname.replace(/^\/api\/backend/, "");
+  const upstreamUrl = new URL(`${serverUrl}${upstreamPath}${request.nextUrl.search}`);
 
   const headers = new Headers();
   for (const name of ["authorization", "content-type", "cookie"]) {
