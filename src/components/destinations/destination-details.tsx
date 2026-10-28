@@ -14,6 +14,7 @@ import DeleteDestinationDialog from "@/components/destinations/delete-destinatio
 import BookingCard from "../bookings/bookingcard";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
 import { getAuthToken } from "@/lib/auth-token";
+import { serverApi } from "@/lib/server-url";
 import { authClient } from "@/lib/auth-client";
 
 export default function DestinationDetails({ id }: { id: string }) {
@@ -30,7 +31,7 @@ export default function DestinationDetails({ id }: { id: string }) {
       try {
         const token = await getAuthToken();
         const response = await fetch(
-          `http://localhost:8000/all-package/${encodeURIComponent(id)}`,
+          serverApi(`/all-package/${encodeURIComponent(id)}`),
           { headers: { Authorization: ["Bearer", token].join(" ") } },
         );
 

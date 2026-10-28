@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { CarouselApi } from "@/components/ui/carousel";
+import { serverApi } from "@/lib/server-url";
 import DestinationCard from "@/components/destinations/destination-card";
 import DestinationCardSkeleton from "@/components/destinations/destination-card-skeleton";
 import {
@@ -27,7 +28,7 @@ export default function FeaturedDestinations() {
 
     async function loadFeaturedPackages() {
       try {
-        const response = await fetch("http://localhost:8000/featured-package", {
+        const response = await fetch(serverApi("/featured-package"), {
           cache: "no-store",
         });
         if (!response.ok) throw new Error("Could not load featured packages.");

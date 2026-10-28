@@ -5,6 +5,7 @@ import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { authClient } from "@/lib/auth-client";
 import { getAuthToken } from "@/lib/auth-token";
+import { serverApi } from "@/lib/server-url";
 
 const BookingCard = ({
   destination,
@@ -50,7 +51,7 @@ const BookingCard = ({
 
     try {
       const token = await getAuthToken();
-      const response = await fetch("http://localhost:8000/booking", {
+      const response = await fetch(serverApi("/booking"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

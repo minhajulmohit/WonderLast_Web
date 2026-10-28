@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { getAuthToken } from "@/lib/auth-token";
 import { authClient } from "@/lib/auth-client";
+import { serverApi } from "@/lib/server-url";
 
 const inputClassName =
   "mt-1 h-9 w-full border-0 bg-slate-100 px-3 text-xs text-neutral-800 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-cyan-500";
@@ -42,7 +43,7 @@ export default function AddNewPackagePage() {
 
     try {
       const token = await getAuthToken();
-      const res = await fetch("http://localhost:8000/add-new-package", {
+      const res = await fetch(serverApi("/add-new-package"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

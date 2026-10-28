@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { TravelPackage } from "@/types/travel-package";
 import DestinationCard from "@/components/destinations/destination-card";
+import { serverApi } from "@/lib/server-url";
 import DestinationCardSkeleton from "@/components/destinations/destination-card-skeleton";
 import { isTravelPackage } from "@/lib/travel-package";
 import { toast } from "@/components/ui/toast";
@@ -46,7 +47,7 @@ export default function AllDestinationsPage() {
 
     async function loadDestinations() {
       try {
-        const response = await fetch("http://localhost:8000/all-package");
+        const response = await fetch(serverApi("/all-package"));
 
         if (!response.ok) {
           const error = await response.text();

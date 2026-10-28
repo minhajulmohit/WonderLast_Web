@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { LogOut, Menu, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getAuthToken } from "@/lib/auth-token";
+import { serverApi } from "@/lib/server-url";
 import { toast } from "@/components/ui/toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -39,7 +40,7 @@ const NavLinksLeft = () => {
       try {
         const token = await getAuthToken();
         const response = await fetch(
-          `http://localhost:8000/my-bookings/${encodeURIComponent(currentEmail)}`,
+          serverApi(`/my-bookings/${encodeURIComponent(currentEmail)}`),
           {
             cache: "no-store",
             headers: { Authorization: ["Bearer", token].join(" ") },

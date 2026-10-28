@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/toast";
 import { getAuthToken } from "@/lib/auth-token";
+import { serverApi } from "@/lib/server-url";
 
 const categories = [
   "Adventure",
@@ -60,7 +61,7 @@ export default function EditDestinationDialog({
     try {
       const token = await getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/all-package/${encodeURIComponent(destinationId)}`,
+        serverApi(`/all-package/${encodeURIComponent(destinationId)}`),
         {
           method: "PATCH",
           headers: {

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { CalendarDays, Eye, LoaderCircle, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { getAuthToken } from "@/lib/auth-token";
+import { serverApi } from "@/lib/server-url";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
 import {
   AlertDialog,
@@ -65,7 +66,7 @@ export default function MyBookingCard({ booking }: { booking: MyBooking }) {
     try {
       const token = await getAuthToken();
       const response = await fetch(
-        `http://localhost:8000/my-bookings/${encodeURIComponent(booking.id)}`,
+        serverApi(`/my-bookings/${encodeURIComponent(booking.id)}`),
         {
           method: "DELETE",
           headers: { Authorization: ["Bearer", token].join(" ") },

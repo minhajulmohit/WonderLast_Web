@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { serverApi } from "@/lib/server-url";
 import MyBookingCard, {
   type MyBooking,
 } from "@/components/bookings/my-booking-card";
@@ -37,7 +38,7 @@ async function MyBookingsContent() {
     }
 
     const response = await fetch(
-      `http://localhost:8000/my-bookings/${encodeURIComponent(user.email)}`,
+      serverApi(`/my-bookings/${encodeURIComponent(user.email)}`),
       {
         cache: "no-store",
         headers: { Authorization: ["Bearer", token.token].join(" ") },
