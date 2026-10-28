@@ -4,5 +4,5 @@ export const SERVER_URL = (
 
 export function serverApi(path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${SERVER_URL}${normalizedPath}`;
+  return `/api/backend${normalizedPath}`;
 }
