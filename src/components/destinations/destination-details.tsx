@@ -13,7 +13,6 @@ import EditDestinationDialog from "@/components/destinations/edit-destination-di
 import DeleteDestinationDialog from "@/components/destinations/delete-destination-dialog";
 import BookingCard from "../bookings/bookingcard";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
-import { getAuthToken } from "@/lib/auth-token";
 import { serverApi } from "@/lib/server-url";
 import { authClient } from "@/lib/auth-client";
 
@@ -29,10 +28,8 @@ export default function DestinationDetails({ id }: { id: string }) {
 
     async function loadDestination() {
       try {
-        const token = await getAuthToken();
         const response = await fetch(
           serverApi(`/all-package/${encodeURIComponent(id)}`),
-          { headers: { Authorization: ["Bearer", token].join(" ") } },
         );
 
         if (!response.ok) {
