@@ -12,6 +12,7 @@ export const auth = betterAuth({
       nationality: { type: "string", required: false, input: true },
       location: { type: "string", required: false, input: true },
       phone: { type: "string", required: false, input: true },
+      role: { type: "string", required: false, input: false },
     },
   },
   emailAndPassword: {

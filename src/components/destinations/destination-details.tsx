@@ -13,6 +13,7 @@ import EditDestinationDialog from "@/components/destinations/edit-destination-di
 import DeleteDestinationDialog from "@/components/destinations/delete-destination-dialog";
 import BookingCard from "../bookings/bookingcard";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
+import { getAuthToken } from "@/lib/auth-token";
 
 export default function DestinationDetails({ id }: { id: string }) {
   const [destination, setDestination] = useState<TravelPackage | null>(null);
@@ -24,27 +25,10 @@ export default function DestinationDetails({ id }: { id: string }) {
 
     async function loadDestination() {
       try {
-        const tokenResponse = await fetch("/api/auth/token", {
-          cache: "no-store",
-        });
-
-        if (!tokenResponse.ok) {
-          throw new Error("Could not get an authentication token.");
-        }
-
-        const tokenData: unknown = await tokenResponse.json();
-        if (
-          !tokenData ||
-          typeof tokenData !== "object" ||
-          !("token" in tokenData) ||
-          typeof tokenData.token !== "string"
-        ) {
-          throw new Error("The authentication server returned an invalid token.");
-        }
-
+        const token = await getAuthToken();
         const response = await fetch(
           `http://localhost:8000/all-package/${encodeURIComponent(id)}`,
-          { headers: { Authorization: ["Bearer", tokenData.token].join(" ") } },
+          { headers: { Authorization: ["Bearer", token].join(" ") } },
         );
 
         if (!response.ok) {

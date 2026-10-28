@@ -33,7 +33,7 @@ export default function WhyChoose() {
             id="why-choose-title"
             className="font-(family-name:--font-display) text-3xl font-medium leading-tight tracking-tight text-neutral-950 sm:text-5xl"
           >
-            Why Choose Wanderlust
+            Why Choose Wanderlast
           </h2>
           <p className="mt-1 text-xs text-neutral-500">
             Your trusted partner for exceptional travel experiences

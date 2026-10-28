@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 const quickLinks = [
   { label: "Home", href: "/" },
-  { label: "Destinations", href: "/destinations" },
+  { label: "Destinations", href: "/all-destinations" },
   { label: "My Bookings", href: "/mybookings" },
   { label: "My Profile", href: "/profile" },
 ];
@@ -124,7 +124,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-3 text-xs text-neutral-400 sm:px-8">
-          <p>© 2026 Wanderlust. All rights reserved.</p>
+          <p>© 2026 Wanderlast. All rights reserved.</p>
           <nav aria-label="Social media" className="flex items-center gap-5">
             <a
               href="https://x.com"

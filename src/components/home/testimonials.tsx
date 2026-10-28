@@ -26,7 +26,7 @@ const testimonials = [
   },
   {
     quote:
-      '"The Bali Trip Was Absolutely Magical! The local experiences and thoughtful planning made every day special. I cannot wait to travel with Wanderlust again."',
+      '"The Bali Trip Was Absolutely Magical! The local experiences and thoughtful planning made every day special. I cannot wait to travel with Wanderlast again."',
     name: "Michael Chen",
     location: "Singapore",
     image: "/assets/person2.png",

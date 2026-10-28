@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import NavBer from "@/components/nav/navBer";
+import NavBar from "@/components/nav/navbar";
 import Footer from "@/components/footer/footer";
 import { Toaster } from "@/components/ui/toast";
 
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Toaster>
-          <NavBer />
+          <NavBar />
 
           {children}
           <Footer />

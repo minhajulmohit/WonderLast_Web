@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import NavLogo from "./nav-logo";
 import { NavLinksLeft, NavLinksRight } from "./navLinks";
 
-const NavBer = () => {
+const NavBar = () => {
   return (
     <nav
       aria-label="Main navigation"
@@ -21,4 +21,4 @@ const NavBer = () => {
   );
 };
 
-export default NavBer;
+export default NavBar;

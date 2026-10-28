@@ -85,7 +85,9 @@ const NavLinksLeft = () => {
     { href: "/", label: "Home" },
     { href: "/all-destinations", label: "Destinations" },
     { href: "/mybookings", label: "My Bookings" },
-    { href: "/add-new-package", label: "Admin" },
+    ...(session?.user?.role === "admin"
+      ? [{ href: "/add-new-package", label: "Admin" }]
+      : []),
   ];
 
   return (
