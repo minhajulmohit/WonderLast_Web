@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const NavLogo = () => {
@@ -7,12 +8,14 @@ const NavLogo = () => {
       aria-label="Wanderlast home"
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     >
-      <span
-        aria-hidden="true"
-        className="inline-flex size-8 items-center justify-center rounded-full border border-cyan-600 font-(family-name:--font-display) text-2xl font-semibold leading-none text-cyan-700 sm:size-9"
-      >
-        W
-      </span>
+      <Image
+        src="/assets/Wanderlast.png"
+        alt="Wanderlast"
+        width={135}
+        height={20}
+        priority
+        className="h-auto w-26.25 sm:w-33.75"
+      />
     </Link>
   );
 };
