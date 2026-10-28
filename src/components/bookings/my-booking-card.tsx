@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { CalendarDays, Eye, LoaderCircle, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { getAuthToken } from "@/lib/auth-token";
@@ -48,8 +47,13 @@ function isSafeImageUrl(value: string | undefined): value is string {
   }
 }
 
-export default function MyBookingCard({ booking }: { booking: MyBooking }) {
-  const router = useRouter();
+export default function MyBookingCard({
+  booking,
+  onCancelled,
+}: {
+  booking: MyBooking;
+  onCancelled?: (bookingId: string) => void;
+}) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const isConfirmed = booking.status.toLowerCase() === "confirmed";
@@ -97,8 +101,8 @@ export default function MyBookingCard({ booking }: { booking: MyBooking }) {
         description: `${booking.destinationName} booking was cancelled.`,
         type: "success",
       });
+      onCancelled?.(booking.id);
       window.dispatchEvent(new Event("wanderlast:bookings-updated"));
-      router.refresh();
     } catch (error) {
       toast.add({
         title: "Could not cancel booking",

@@ -121,7 +121,15 @@ function MyBookingsPageContent() {
         ) : bookings.length > 0 ? (
           <div className="space-y-3">
             {bookings.map((booking) => (
-              <MyBookingCard booking={booking} key={booking.id} />
+              <MyBookingCard
+                booking={booking}
+                key={booking.id}
+                onCancelled={(bookingId) =>
+                  setBookings((current) =>
+                    current.filter((item) => item.id !== bookingId),
+                  )
+                }
+              />
             ))}
           </div>
         ) : (
