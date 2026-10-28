@@ -72,13 +72,20 @@ export default function MyBookingCard({ booking }: { booking: MyBooking }) {
           headers: { Authorization: ["Bearer", token].join(" ") },
         },
       );
-      const result = (await response.json()) as {
-        error?: string;
-        deletedCount?: number;
-      };
+      const responseText = await response.text();
+      let result: { error?: string; deletedCount?: number; msg?: string } = {};
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText) as typeof result;
+        } catch {
+          throw new Error("The booking server returned an invalid response.");
+        }
+      }
 
       if (!response.ok) {
-        throw new Error(result.error || "Could not cancel this booking.");
+        throw new Error(
+          result.error || result.msg || "Could not cancel this booking.",
+        );
       }
       if (result.deletedCount !== 1) {
         throw new Error("This booking was not found or was already cancelled.");
