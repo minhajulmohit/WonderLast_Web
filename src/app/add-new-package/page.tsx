@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { PackagePlus, X } from "lucide-react";
-import type { FormEvent } from "react";
+import { useEffect, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
 import { getAuthToken } from "@/lib/auth-token";
+import { authClient } from "@/lib/auth-client";
 
 const inputClassName =
   "mt-1 h-9 w-full border-0 bg-slate-100 px-3 text-xs text-neutral-800 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-cyan-500";
@@ -12,6 +14,16 @@ const inputClassName =
 const labelClassName = "block text-xs font-medium text-neutral-900";
 
 export default function AddNewPackagePage() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const isAdmin = session?.user?.role === "admin";
+
+  useEffect(() => {
+    if (!isPending && !isAdmin) router.replace("/");
+  }, [isAdmin, isPending, router]);
+
+  if (isPending || !isAdmin) return null;
+
   const handleAddBtn = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 

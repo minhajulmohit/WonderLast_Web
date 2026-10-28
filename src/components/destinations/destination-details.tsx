@@ -14,11 +14,14 @@ import DeleteDestinationDialog from "@/components/destinations/delete-destinatio
 import BookingCard from "../bookings/bookingcard";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
 import { getAuthToken } from "@/lib/auth-token";
+import { authClient } from "@/lib/auth-client";
 
 export default function DestinationDetails({ id }: { id: string }) {
   const [destination, setDestination] = useState<TravelPackage | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const { data: session } = authClient.useSession();
+  const isAdmin = session?.user?.role === "admin";
 
   useEffect(() => {
     let isActive = true;
@@ -118,17 +121,19 @@ export default function DestinationDetails({ id }: { id: string }) {
       <section className="mx-auto max-w-6xl">
         <div className="flex items-center justify-between gap-4">
           {backLink}
-          <div className="flex items-center gap-2">
-            <EditDestinationDialog
-              destination={destination}
-              destinationId={id}
-              onSaved={setDestination}
-            />
-            <DeleteDestinationDialog
-              destinationId={id}
-              destinationName={destination.destinationName}
-            />
-          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-2">
+              <EditDestinationDialog
+                destination={destination}
+                destinationId={id}
+                onSaved={setDestination}
+              />
+              <DeleteDestinationDialog
+                destinationId={id}
+                destinationName={destination.destinationName}
+              />
+            </div>
+          )}
         </div>
 
         <div className="relative mt-4 aspect-16/7 overflow-hidden bg-linear-to-br from-cyan-100 via-sky-200 to-emerald-100">
