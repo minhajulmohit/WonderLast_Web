@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { toast } from "@/components/ui/toast";
 import { authClient } from "@/lib/auth-client";
+import { getAuthToken } from "@/lib/auth-token";
 
 const BookingCard = ({
   destination,
@@ -48,9 +49,13 @@ const BookingCard = ({
     setIsSubmitting(true);
 
     try {
+      const token = await getAuthToken();
       const response = await fetch("http://localhost:8000/booking", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
         body: JSON.stringify({
           email: session.user.email,
           packageId: String(destination.id),

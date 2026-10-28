@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
- 
-  CalendarDays,
-  Check,
-  MapPin,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, CalendarDays, Check, MapPin } from "lucide-react";
 import type { TravelPackage } from "@/types/travel-package";
 import {
   getTravelPackageImageUrl,
@@ -17,10 +10,9 @@ import {
 } from "@/lib/travel-package";
 import DestinationDetailsSkeleton from "@/components/destinations/destination-details-skeleton";
 import EditDestinationDialog from "@/components/destinations/edit-destination-dialog";
+import DeleteDestinationDialog from "@/components/destinations/delete-destination-dialog";
 import BookingCard from "../bookings/bookingcard";
 import CachedRemoteImage from "@/components/ui/cached-remote-image";
-
-
 
 export default function DestinationDetails({ id }: { id: string }) {
   const [destination, setDestination] = useState<TravelPackage | null>(null);
@@ -32,8 +24,27 @@ export default function DestinationDetails({ id }: { id: string }) {
 
     async function loadDestination() {
       try {
+        const tokenResponse = await fetch("/api/auth/token", {
+          cache: "no-store",
+        });
+
+        if (!tokenResponse.ok) {
+          throw new Error("Could not get an authentication token.");
+        }
+
+        const tokenData: unknown = await tokenResponse.json();
+        if (
+          !tokenData ||
+          typeof tokenData !== "object" ||
+          !("token" in tokenData) ||
+          typeof tokenData.token !== "string"
+        ) {
+          throw new Error("The authentication server returned an invalid token.");
+        }
+
         const response = await fetch(
           `http://localhost:8000/all-package/${encodeURIComponent(id)}`,
+          { headers: { Authorization: ["Bearer", tokenData.token].join(" ") } },
         );
 
         if (!response.ok) {
@@ -129,13 +140,10 @@ export default function DestinationDetails({ id }: { id: string }) {
               destinationId={id}
               onSaved={setDestination}
             />
-            <Link
-              href="/all-destinations"
-              className="inline-flex h-8 items-center gap-1.5 border border-red-300 px-3 text-xs text-red-500 transition-colors hover:bg-red-50"
-            >
-              <Trash2 aria-hidden="true" size={12} />
-              Delete
-            </Link>
+            <DeleteDestinationDialog
+              destinationId={id}
+              destinationName={destination.destinationName}
+            />
           </div>
         </div>
 
@@ -199,10 +207,7 @@ export default function DestinationDetails({ id }: { id: string }) {
               </p>
               <ul className="mt-4 grid gap-3 text-xs text-neutral-700 sm:grid-cols-2">
                 {highlights.map((highlight) => (
-                  <li
-                    className="flex items-center gap-2"
-                    key={highlight.label}
-                  >
+                  <li className="flex items-center gap-2" key={highlight.label}>
                     <Check
                       aria-hidden="true"
                       className="shrink-0 text-emerald-600"

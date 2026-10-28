@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/toast";
+import { getAuthToken } from "@/lib/auth-token";
 
 export default function DeleteDestinationDialog({
   destinationId,
@@ -29,9 +30,13 @@ export default function DeleteDestinationDialog({
     setIsDeleting(true);
 
     try {
+      const token = await getAuthToken();
       const response = await fetch(
         `http://localhost:8000/all-package/${encodeURIComponent(destinationId)}`,
-        { method: "DELETE" },
+        {
+          method: "DELETE",
+          headers: { Authorization: ["Bearer", token].join(" ") },
+        },
       );
 
       if (!response.ok) {

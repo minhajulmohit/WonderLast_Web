@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PackagePlus, X } from "lucide-react";
 import type { FormEvent } from "react";
 import { toast } from "@/components/ui/toast";
+import { getAuthToken } from "@/lib/auth-token";
 
 const inputClassName =
   "mt-1 h-9 w-full border-0 bg-slate-100 px-3 text-xs text-neutral-800 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-cyan-500";
@@ -28,9 +29,13 @@ export default function AddNewPackagePage() {
     };
 
     try {
+      const token = await getAuthToken();
       const res = await fetch("http://localhost:8000/add-new-package", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: ["Bearer", token].join(" "),
+        },
         body: JSON.stringify(packageData),
       });
 

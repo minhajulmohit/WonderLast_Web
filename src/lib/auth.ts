@@ -1,9 +1,10 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
+import { jwt } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGODB_URI as string);
-const db = client.db('wanderlast-users');
+const db = client.db("wanderlast-users");
 
 export const auth = betterAuth({
   user: {
@@ -61,4 +62,9 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
+  plugins: [jwt()],
+
+  session: {
+    cookieCache: { strategy: "jwt", enabled: true, maxAge: 7 * 24 * 60 * 60 },
+  },
 });

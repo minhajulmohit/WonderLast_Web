@@ -31,9 +31,17 @@ async function MyBookingsContent() {
   let errorMessage = "";
 
   try {
+    const token = await auth.api.getToken({ headers: await headers() });
+    if (!token?.token) {
+      throw new Error("Could not get an authentication token.");
+    }
+
     const response = await fetch(
       `http://localhost:8000/my-bookings/${encodeURIComponent(user.email)}`,
-      { cache: "no-store" },
+      {
+        cache: "no-store",
+        headers: { Authorization: ["Bearer", token.token].join(" ") },
+      },
     );
     if (!response.ok) {
       throw new Error(`Booking server responded with ${response.status}.`);
